@@ -1,5 +1,6 @@
 import * as yup from 'yup';
-import {sleep, Logger} from './';
+import Logger from './Logger';
+import sleep from './Sleeper';
 
 const schema = yup.object({
     name: yup.string().required("RetryContext missing name to indicate what context retries are happening in"),
