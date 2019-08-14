@@ -72,4 +72,27 @@ describe("RetryContext", ()=>{
             done();
         }, "a1", "a2", "a3");
     });
+
+    it("Should obey continuationFilter callback", done=>{
+        let called = 0;
+        let check = async () => {
+            ++called;
+            throw new Error("Simulation");
+        }
+        let ctx = new Retry({
+            name: "Test Short Circuit",
+            maxRetries: 3,
+            continuationFilter: (e)=>false
+        });
+
+        ctx.invoke(check, async (e, r)=>{
+            if(!e) {
+                return done(new Error("Expected error to be returned immediately"));
+            }
+            if(called !== 1) {
+                return done(new Error("Expected only to be called once before short circuiting error"));
+            }
+            done();
+        });
+    });
 });
